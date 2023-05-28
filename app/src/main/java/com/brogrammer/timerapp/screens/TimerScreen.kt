@@ -121,7 +121,7 @@ fun Timer(
             )
         ) {
             Text(
-                text = if (isTimerRunning && currentTime >= 0L) "Stop"
+                text = if (isTimerRunning && currentTime > 0L) "Stop"
                 else if (!isTimerRunning && currentTime >= 0L) "Start"
                 else "Restart"
             )
@@ -139,11 +139,9 @@ fun PreviewScreen() {
         color = Color(0xFF101010),
         modifier = Modifier.fillMaxSize()
     ) {
-        //changes made here
         var textFieldState by remember { mutableStateOf("0") }
-        Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 150.dp)) {
+        Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 200.dp)) {
             Timer(
-                //changes made here
                 totalTime = try {
                     textFieldState.toLong() * 1000L
                 }catch(e : NumberFormatException) {
@@ -156,7 +154,6 @@ fun PreviewScreen() {
             )
         }
 
-        //Text Field is called here
         TextField{
             //changes made here
             textFieldState = it
@@ -168,12 +165,14 @@ fun PreviewScreen() {
 
 
 
-// This is the TextField compose function code
+
 @Composable
-//changes made here
+
 fun TextField(onTextChange : (String) -> Unit) {
     Box(
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
+            .padding(top = 100.dp)
     ) {
 
         var textFieldState by remember { mutableStateOf("") }
