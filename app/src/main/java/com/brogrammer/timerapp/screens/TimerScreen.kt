@@ -1,8 +1,10 @@
 package com.brogrammer.timerapp.screens
 
+
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -15,6 +17,7 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
@@ -129,16 +132,6 @@ fun Timer(
 }
 
 
-//@Composable
-//fun Preview() {
-//    Timer(
-//        totalTime = 100L * 1000L,
-//        handleColor = Color.Green,
-//        inactiveBarColor = Color.DarkGray,
-//        activeBarColor = Color(0xFF37B900)
-//    )
-//}
-
 @Preview
 @Composable
 fun PreviewScreen() {
@@ -146,24 +139,39 @@ fun PreviewScreen() {
         color = Color(0xFF101010),
         modifier = Modifier.fillMaxSize()
     ) {
+        //changes made here
+        var textFieldState by remember { mutableStateOf("0") }
         Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 150.dp)) {
             Timer(
-                totalTime = 100L * 1000L,
+                //changes made here
+                totalTime = try {
+                    textFieldState.toLong() * 1000L
+                }catch(e : NumberFormatException) {
+                    0
+                },
                 handleColor = Color.Green,
                 inactiveBarColor = Color.DarkGray,
                 activeBarColor = Color(0xFF37B900),
                 modifier = Modifier.size(200.dp)
             )
         }
-        TextField()
+
+        //Text Field is called here
+        TextField{
+            //changes made here
+            textFieldState = it
+        }
 
     }
 
 }
 
 
+
+// This is the TextField compose function code
 @Composable
-fun TextField() {
+//changes made here
+fun TextField(onTextChange : (String) -> Unit) {
     Box(
         contentAlignment = Alignment.Center
     ) {
@@ -172,7 +180,11 @@ fun TextField() {
         val myColor = Color.White
         TextField(
             value = textFieldState,
-            onValueChange = { textFieldState = it },
+            onValueChange = {
+                textFieldState = it
+                //changes made here
+                onTextChange(it)
+            },
             label = { Text(text = "Enter the duration in seconds") },
             colors = TextFieldDefaults.textFieldColors(
                 unfocusedLabelColor = myColor,
@@ -188,6 +200,7 @@ fun TextField() {
                 textColor = myColor
             ),
             shape = RoundedCornerShape(topStart = 25.dp, topEnd = 25.dp),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
         )
 
     }
